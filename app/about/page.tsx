@@ -122,7 +122,7 @@ export default function AboutPage() {
             </p>
           </motion.section>
 
-          {/* Overview & Our Story Section (Screenshot එකට අනුව එකතු කළ කොටස) */}
+          {/* Overview & Our Story Section */}
           <motion.section
             initial="hidden"
             whileInView="visible"
@@ -130,24 +130,24 @@ export default function AboutPage() {
             variants={fadeInUp}
             className="space-y-8"
           >
-            <h2 className="text-3xl sm:text-5xl font-extrabold text-slate-200">
+            <h2 className="text-3xl sm:text-5xl font-extrabold text-slate-900 dark:text-slate-100">
               Overview
             </h2>
 
             <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
               {/* Overlapping Floating Story Card */}
               <div className="lg:col-span-6 lg:z-10 lg:-mr-16">
-                <div className="bg-slate-900/90 border border-slate-800 backdrop-blur-xl rounded-3xl p-6 sm:p-10 shadow-2xl space-y-4">
-                  <span className="text-xs font-bold text-emerald-500 tracking-widest uppercase">
+                <div className="bg-white/80 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 backdrop-blur-xl rounded-3xl p-6 sm:p-10 shadow-xl dark:shadow-2xl space-y-4 transition-colors">
+                  <span className="text-xs font-bold text-emerald-600 dark:text-emerald-500 tracking-widest uppercase">
                     EST 2010
                   </span>
-                  <h3 className="text-2xl sm:text-4xl font-extrabold text-white">
+                  <h3 className="text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
                     Our Story
                   </h3>
-                  <p className="text-xs sm:text-sm opacity-80 leading-relaxed space-y-3">
+                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                     We are a team of creative professionals working together with you, to convert your precious ideas into a winning certainty. Your website needs to reflect your company's image and products into the world and it must be web design with your customers in mind.
                   </p>
-                  <p className="text-xs sm:text-sm opacity-80 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                     Incarnate offers you successful website marketing with latest digital marketing trends. We ensure your project communicates effectively to your target audience by designing every last pixel to focus on delivering the right message while making sure your message is outshined from the competition.
                   </p>
                   <div className="pt-2">
@@ -159,14 +159,14 @@ export default function AboutPage() {
               </div>
 
               {/* Story Right Image */}
-              <div className="lg:col-span-6 relative h-[350px] sm:h-[450px] rounded-3xl overflow-hidden border border-slate-800 shadow-xl">
+              <div className="lg:col-span-6 relative h-[350px] sm:h-[450px] rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-xl">
                 <Image
                   src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80"
                   alt="Our Story Workspace"
                   fill
                   className="object-cover"
                 />
-                <div className="absolute inset-0 bg-slate-950/20" />
+                <div className="absolute inset-0 bg-slate-950/10 dark:bg-slate-950/30" />
               </div>
             </div>
           </motion.section>
