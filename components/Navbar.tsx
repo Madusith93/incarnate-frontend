@@ -12,6 +12,7 @@ const navLinks = [
   { name: 'Portfolio', href: '#portfolio' },
   { name: 'Technology', href: '#technology' },
   { name: 'Magazine', href: '#magazine' },
+  { name: 'Contact', href: '#contact' },
 ];
 
 export default function Navbar() {
@@ -107,10 +108,10 @@ export default function Navbar() {
 
           {/* Contact CTA Button */}
           <Link
-            href="#contact"
+            href="/tours"
             className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs uppercase tracking-wider px-5 py-2.5 rounded-full shadow-md shadow-emerald-500/20 transition-all hover:scale-[1.02]"
           >
-            Contact <ArrowUpRight className="w-4 h-4" />
+            Tours <ArrowUpRight className="w-4 h-4" />
           </Link>
         </div>
 
