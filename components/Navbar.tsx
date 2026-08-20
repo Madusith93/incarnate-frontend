@@ -108,7 +108,7 @@ export default function Navbar() {
 
           {/* Contact CTA Button */}
           <Link
-            href="/tours"
+            href="https://incarnate.lk/tours/"
             className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs uppercase tracking-wider px-5 py-2.5 rounded-full shadow-md shadow-emerald-500/20 transition-all hover:scale-[1.02]"
           >
             Tours <ArrowUpRight className="w-4 h-4" />

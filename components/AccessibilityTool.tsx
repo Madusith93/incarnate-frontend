@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Accessibility, 
+  PersonStanding, 
   X, 
   ZoomIn, 
   ZoomOut, 
@@ -62,7 +62,7 @@ export default function AccessibilityTool() {
           >
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3 mb-4">
               <div className="flex items-center gap-2">
-                <Accessibility className="w-5 h-5 text-emerald-500" />
+                <PersonStanding className="w-5 h-5 text-emerald-500" />
                 <h3 className="font-bold text-sm tracking-wide">Accessibility Tools</h3>
               </div>
               <button
@@ -148,7 +148,7 @@ export default function AccessibilityTool() {
         className="w-14 h-14 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center shadow-lg shadow-emerald-500/30 hover:scale-105 active:scale-95 transition-transform"
         aria-label="Accessibility Menu"
       >
-        <Accessibility className="w-7 h-7" />
+        <PersonStanding className="w-7 h-7" />
       </button>
     </div>
   );
