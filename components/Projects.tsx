@@ -41,7 +41,7 @@ const projects = [
     category: 'Retail & Fashion',
     location: 'Sri Lanka',
     image: '/projects/Martin.png',
-    url: 'https://pgmartin.lk/',
+    url: 'https://www.pgmartin.com/ '
   },
   {
     id: 5,
