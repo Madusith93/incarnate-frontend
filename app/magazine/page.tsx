@@ -650,7 +650,7 @@ const ARTICLES_DATA: Article[] = [
     category: "ARTICLE",
     date: "2026-06-16",
     readTime: "4 min read",
-    image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=800&auto=format&fit=crop",
+    image: '/scrolling.png ',
     content: (
       <div className="space-y-6 text-slate-700 dark:text-slate-300 leading-relaxed text-sm sm:text-base">
         <p>
@@ -881,7 +881,7 @@ const ARTICLES_DATA: Article[] = [
     category: "ARTICLE",
     date: "2025-06-01",
     readTime: "6 min read",
-    image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=800&auto=format&fit=crop",
+    image: '/tourism.png',
     content: (
       <div className="space-y-6 text-slate-700 dark:text-slate-300 leading-relaxed text-sm sm:text-base">
         <div className="text-xs text-slate-500 dark:text-slate-400 font-medium">
@@ -1162,7 +1162,7 @@ const ARTICLES_DATA: Article[] = [
     category: "ARTICLE",
     date: "2026-06-01",
     readTime: "5 min read",
-    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=800&auto=format&fit=crop",
+   image: '/building.png',
     content: (
       <div className="space-y-6 text-slate-700 dark:text-slate-300 leading-relaxed text-sm sm:text-base">
         <div className="text-xs text-slate-500 dark:text-slate-400 font-medium">
@@ -1344,7 +1344,7 @@ const ARTICLES_DATA: Article[] = [
     category: "PROJECT LAUNCH",
     date: "2026-06-20",
     readTime: "2 min read",
-    image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=800&auto=format&fit=crop",
+    image: '/academy.png' ,
     content: (
       <div className="space-y-6 text-slate-700 dark:text-slate-300 leading-relaxed text-sm sm:text-base">
         <p>
@@ -1404,7 +1404,7 @@ const ARTICLES_DATA: Article[] = [
     category: "GUIDE",
     date: "2026-06-22",
     readTime: "4 min read",
-    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=800&auto=format&fit=crop",
+    image: '/cms.png' ,
     content: (
       <div className="space-y-6 text-slate-700 dark:text-slate-300 leading-relaxed text-sm sm:text-base">
         <p>
@@ -1556,7 +1556,7 @@ const ARTICLES_DATA: Article[] = [
     category: "TOURISM",
     date: "2026-08-10",
     readTime: "4 min read",
-    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=800&auto=format&fit=crop",
+    image: '/paradise.png' ,
     content: (
       <div className="space-y-6 text-slate-700 dark:text-slate-300 leading-relaxed text-sm sm:text-base">
         <p className="font-semibold text-slate-900 dark:text-slate-100">
@@ -1649,7 +1649,7 @@ const ARTICLES_DATA: Article[] = [
     category: "GUIDE",
     date: "2026-08-21",
     readTime: "4 min read",
-    image: "https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?q=80&w=800&auto=format&fit=crop",
+    image: '/seo.png' ,
     content: (
       <div className="space-y-6 text-slate-700 dark:text-slate-300 leading-relaxed text-sm sm:text-base">
         <p>
@@ -1756,7 +1756,7 @@ const ARTICLES_DATA: Article[] = [
     category: "CYBERSECURITY",
     date: "2026-08-21",
     readTime: "5 min read",
-    image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=800&auto=format&fit=crop",
+   image: '/critical.png' ,
     content: (
       <div className="space-y-6 text-slate-700 dark:text-slate-300 leading-relaxed text-sm sm:text-base">
         <p>
