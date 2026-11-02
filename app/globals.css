@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./cms-prose.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
