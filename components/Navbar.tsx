@@ -108,6 +108,8 @@ export default function Navbar() {
           {/* CTA */}
           <Link
             href="https://incarnate.lk/tours/"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs uppercase tracking-wider px-5 py-2.5 rounded-full shadow-md shadow-emerald-500/20 transition-all hover:scale-[1.02]"
           >
             Tours <ArrowUpRight className="w-4 h-4" />
@@ -154,11 +156,13 @@ export default function Navbar() {
             </Link>
           ))}
           <Link
-            href="/contact"
+            href="https://incarnate.lk/tours/"
+            target="_blank"
+            rel="noopener noreferrer"
             onClick={() => setMobileMenuOpen(false)}
             className="inline-block w-full text-center bg-emerald-500 text-slate-950 font-bold text-sm uppercase px-5 py-3 rounded-xl mt-4"
           >
-            Contact Us
+            Tours
           </Link>
         </div>
       )}
