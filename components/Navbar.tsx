@@ -26,45 +26,49 @@ export default function Navbar() {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
-    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const currentTheme = mounted ? (theme === 'system' ? resolvedTheme : theme) : 'dark';
   const isLight = currentTheme === 'light';
 
-  // Dynamic Background Styles
-  const getHeaderStyles = () => {
-    if (scrolled) {
-      return isLight
-        ? 'bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm py-3.5'
-        : 'bg-slate-950/85 backdrop-blur-md border-b border-emerald-500/10 shadow-sm py-3.5';
-    }
-    return 'bg-transparent py-5';
-  };
+  // Light mode: always a solid light header, so dark text is never drawn over a light page.
+  // Dark mode: transparent at the top, frosted once scrolled (unchanged).
+  const headerStyles = isLight
+    ? `bg-white/90 backdrop-blur-md border-b border-slate-200 ${scrolled ? 'shadow-sm py-3.5' : 'py-5'}`
+    : scrolled
+      ? 'bg-slate-950/85 backdrop-blur-md border-b border-emerald-500/10 shadow-sm py-3.5'
+      : 'bg-transparent py-5';
 
-  // Dynamic Text Colors for Links & Logo
-  const getTextColor = () => {
-    if (scrolled && isLight) {
-      return 'text-slate-900 hover:text-emerald-600';
-    }
-    return 'text-slate-100 hover:text-emerald-400';
-  };
+  const linkColor = isLight
+    ? 'text-slate-900 hover:text-emerald-600'
+    : 'text-slate-100 hover:text-emerald-400';
 
-  const getLogoColor = () => {
-    if (scrolled && isLight) {
-      return 'text-slate-900';
-    }
-    return 'text-white';
-  };
+  const logoColor = isLight ? 'text-slate-900' : 'text-white';
+
+  const toggleStyles = isLight
+    ? 'border-slate-300 bg-slate-100 text-slate-800 hover:border-emerald-500'
+    : 'border-slate-700/80 bg-slate-900/80 text-slate-200 hover:border-emerald-400';
+
+  const menuButtonColor = isLight ? 'text-slate-900' : 'text-white';
+
+  const drawerStyles = isLight
+    ? 'bg-white/95 border-slate-200 text-slate-900'
+    : 'bg-slate-950/95 border-slate-800 text-white';
+
+  const drawerLinkColor = isLight
+    ? 'text-slate-800 hover:text-emerald-600'
+    : 'text-slate-200 hover:text-emerald-400';
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${getHeaderStyles()}`}>
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${headerStyles}`}>
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
-        
+
         {/* Logo */}
         <Link className="flex items-center gap-2 group" href="/">
-          <span className={`text-2xl font-black tracking-wider transition-colors ${getLogoColor()}`}>
+          <span className={`text-2xl font-black tracking-wider transition-colors ${logoColor}`}>
             INCARNATE<span className="text-emerald-500">.</span>
           </span>
         </Link>
@@ -75,7 +79,7 @@ export default function Navbar() {
             <Link
               key={link.name}
               href={link.href}
-              className={`text-sm font-semibold transition-colors ${getTextColor()}`}
+              className={`text-sm font-semibold transition-colors ${linkColor}`}
             >
               {link.name}
             </Link>
@@ -84,16 +88,11 @@ export default function Navbar() {
 
         {/* Actions */}
         <div className="hidden lg:flex items-center gap-4">
-          
-          {/* Dynamic Theme Toggle Button */}
+          {/* Theme Toggle */}
           {mounted ? (
             <button
               onClick={() => setTheme(isLight ? 'dark' : 'light')}
-              className={`p-2.5 rounded-full border transition-all cursor-pointer ${
-                scrolled && isLight
-                  ? 'border-slate-300 bg-slate-100 text-slate-800 hover:border-emerald-500'
-                  : 'border-slate-700/80 bg-slate-900/80 text-slate-200 hover:border-emerald-400'
-              }`}
+              className={`p-2.5 rounded-full border transition-all cursor-pointer ${toggleStyles}`}
               aria-label="Toggle Theme"
             >
               {isLight ? (
@@ -106,7 +105,7 @@ export default function Navbar() {
             <div className="w-9 h-9 rounded-full border border-slate-700/80 bg-slate-900/80" />
           )}
 
-          {/* Contact CTA Button */}
+          {/* CTA */}
           <Link
             href="https://incarnate.lk/tours/"
             className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs uppercase tracking-wider px-5 py-2.5 rounded-full shadow-md shadow-emerald-500/20 transition-all hover:scale-[1.02]"
@@ -115,16 +114,13 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Mobile Menu Toggle Button */}
+        {/* Mobile controls */}
         <div className="flex items-center gap-3 lg:hidden">
           {mounted && (
             <button
               onClick={() => setTheme(isLight ? 'dark' : 'light')}
-              className={`p-2 rounded-full border ${
-                scrolled && isLight
-                  ? 'border-slate-300 bg-slate-100 text-slate-800'
-                  : 'border-slate-700/80 bg-slate-900/80 text-slate-200'
-              }`}
+              className={`p-2 rounded-full border ${toggleStyles}`}
+              aria-label="Toggle Theme"
             >
               {isLight ? (
                 <Moon className="w-4 h-4 text-emerald-600" />
@@ -135,7 +131,9 @@ export default function Navbar() {
           )}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className={`p-2 ${scrolled && isLight ? 'text-slate-900' : 'text-white'}`}
+            className={`p-2 ${menuButtonColor}`}
+            aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={mobileMenuOpen}
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -144,19 +142,19 @@ export default function Navbar() {
 
       {/* Mobile Menu Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-slate-950/95 border-b border-slate-800 backdrop-blur-xl px-6 py-6 space-y-4 text-white">
+        <div className={`lg:hidden border-b backdrop-blur-xl px-6 py-6 space-y-4 ${drawerStyles}`}>
           {navLinks.map((link) => (
             <Link
               key={link.name}
               href={link.href}
               onClick={() => setMobileMenuOpen(false)}
-              className="block text-base font-semibold text-slate-200 hover:text-emerald-400"
+              className={`block text-base font-semibold ${drawerLinkColor}`}
             >
               {link.name}
             </Link>
           ))}
           <Link
-            href="#contact"
+            href="/contact"
             onClick={() => setMobileMenuOpen(false)}
             className="inline-block w-full text-center bg-emerald-500 text-slate-950 font-bold text-sm uppercase px-5 py-3 rounded-xl mt-4"
           >
