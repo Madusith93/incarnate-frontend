@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { Award, Users, Code, Search, Sparkles, X, ZoomIn, Play } from 'lucide-react';
@@ -16,9 +16,18 @@ type StatItem = {
 };
 
 type TeamMember = {
+  id?: number | string;
   name: string;
   role: string;
   image: string;
+};
+
+// Shape of one item returned by /api/public/team
+type ApiTeamItem = {
+  id: number | string;
+  title: string;
+  image1?: string;
+  data?: { role?: unknown };
 };
 
 const stats: StatItem[] = [
@@ -28,7 +37,8 @@ const stats: StatItem[] = [
   { value: '400+', label: 'SEO Projects', icon: Search },
 ];
 
-const teamMembers: TeamMember[] = [
+// Shown instantly while the live list loads, and used if the CMS request fails.
+const fallbackTeamMembers: TeamMember[] = [
   {
     name: 'Pulasthi Wanniarachchi',
     role: 'CEO',
@@ -83,8 +93,82 @@ const staggerContainer: Variants = {
   },
 };
 
+function getInitials(name: string) {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? '')
+    .join('');
+}
+
+// Uploaded CMS images are served by the /uploads route; skip the image
+// optimizer for them so no extra cache files are written to disk.
+function isUploadedImage(src: string) {
+  return src.startsWith('/uploads/');
+}
+
 export default function AboutPage() {
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
+  const [activeAudio, setActiveAudio] = useState<'story' | 'ceo' | null>(null);
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>(fallbackTeamMembers);
+
+  // Load the live team list from the CMS so new members appear without a rebuild.
+  useEffect(() => {
+    let cancelled = false;
+
+    fetch('/api/public/team', { cache: 'no-store' })
+      .then((res) => {
+        if (!res.ok) throw new Error(`Team request failed: ${res.status}`);
+        return res.json();
+      })
+      .then((json) => {
+        if (cancelled) return;
+        const items: ApiTeamItem[] = Array.isArray(json?.items) ? json.items : [];
+        const mapped: TeamMember[] = items
+          .map((item) => ({
+            id: item.id,
+            name: item.title ?? '',
+            role: typeof item.data?.role === 'string' ? item.data.role : '',
+            image: item.image1 ?? '',
+          }))
+          .filter((member) => member.name);
+
+        if (mapped.length > 0) setTeamMembers(mapped);
+      })
+      .catch(() => {
+        // Keep the fallback list if the request fails.
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const handleRead = (type: 'story' | 'ceo', text: string) => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+      alert('Your browser does not support text-to-speech.');
+      return;
+    }
+
+    if (activeAudio === type) {
+      window.speechSynthesis.cancel();
+      setActiveAudio(null);
+    } else {
+      window.speechSynthesis.cancel(); // පරණ ඕඩියෝ එකක් යනවා නම් නවත්වයි
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.onend = () => setActiveAudio(null);
+      utterance.onerror = () => setActiveAudio(null);
+
+      window.speechSynthesis.speak(utterance);
+      setActiveAudio(type);
+    }
+  };
+
+  const storyText = `Our Story. We are a team of creative professionals working together with you, to convert your precious ideas into a winning certainty. Your website needs to reflect your company's image and products into the world and it must be web design with your customers in mind. Incarnate offers you successful website marketing with latest digital marketing trends. We ensure your project communicates effectively to your target audience by designing every last pixel to focus on delivering the right message while making sure your message is outshined from the competition.`;
+
+  const ceoText = `Mr. Pulasthi Wanniarachchi. CEO of Incarnate (Pvt) Ltd. Mr. Pulasthi Wanniarachchi is one of the most proficient and highly competent SEO Engineers in Sri Lanka who dispenses his service to empower and boost online visibility of brands. He is the CEO of Incarnate (Pvt) Ltd, Senior digital marketing consultant, Part-time lecturer for state universities, government and non-government organizations. Specialized in Search Engine Optimization, Search Engine Marketing, Social Media Marketing, and Web Analytics with a high capability to go beyond expectations.`;
 
   return (
     <div className="min-h-screen flex flex-col justify-between transition-colors duration-300 relative overflow-hidden">
@@ -150,10 +234,23 @@ export default function AboutPage() {
                   <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                     Incarnate offers you successful website marketing with latest digital marketing trends. We ensure your project communicates effectively to your target audience by designing every last pixel to focus on delivering the right message while making sure your message is outshined from the competition.
                   </p>
-                  <div className="pt-2">
-                    <button className="w-12 h-12 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 flex items-center justify-center transition-transform duration-300 hover:scale-110 shadow-lg">
-                      <Play className="w-5 h-5 fill-current ml-0.5" />
+                  
+                  {/* Our Story Auto Read Button */}
+                  <div className="pt-2 flex items-center gap-3">
+                    <button 
+                      onClick={() => handleRead('story', storyText)}
+                      className="w-12 h-12 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 flex items-center justify-center transition-transform duration-300 hover:scale-110 shadow-lg cursor-pointer"
+                      title={activeAudio === 'story' ? "Stop Reading" : "Read Aloud"}
+                    >
+                      {activeAudio === 'story' ? (
+                        <span className="w-4 h-4 bg-slate-950 rounded-sm animate-pulse" />
+                      ) : (
+                        <Play className="w-5 h-5 fill-current ml-0.5" />
+                      )}
                     </button>
+                    <span className="text-xs font-semibold opacity-80">
+                      {activeAudio === 'story' ? "Reading story..." : "Listen to our story"}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -228,6 +325,24 @@ export default function AboutPage() {
                 <p className="opacity-70 text-xs sm:text-sm leading-relaxed">
                   Specialized in Search Engine Optimization (SEO), Search Engine Marketing (SEM), Social Media Marketing (SMM), and Web Analytics with a high capability to go beyond expectations.
                 </p>
+
+                {/* CEO Auto Read Button */}
+                <div className="pt-2 flex items-center justify-center lg:justify-start gap-3">
+                  <button 
+                    onClick={() => handleRead('ceo', ceoText)}
+                    className="w-12 h-12 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 flex items-center justify-center transition-transform duration-300 hover:scale-110 shadow-lg cursor-pointer"
+                    title={activeAudio === 'ceo' ? "Stop Reading" : "Read Aloud"}
+                  >
+                    {activeAudio === 'ceo' ? (
+                      <span className="w-4 h-4 bg-slate-950 rounded-sm animate-pulse" />
+                    ) : (
+                      <Play className="w-5 h-5 fill-current ml-0.5" />
+                    )}
+                  </button>
+                  <span className="text-xs font-semibold opacity-80">
+                    {activeAudio === 'ceo' ? "Reading CEO profile..." : "Listen to CEO bio"}
+                  </span>
+                </div>
               </div>
 
               {/* CEO Image */}
@@ -278,7 +393,7 @@ export default function AboutPage() {
               </p>
             </motion.div>
 
-            {/* Team Cards Grid */}
+            {/* Team Cards Grid (loaded live from the CMS) */}
             <motion.div
               initial="hidden"
               whileInView="visible"
@@ -288,19 +403,26 @@ export default function AboutPage() {
             >
               {teamMembers.map((member, idx) => (
                 <motion.div
-                  key={idx}
+                  key={member.id ?? `${member.name}-${idx}`}
                   variants={fadeInUp}
                   whileHover={{ y: -8 }}
                   onClick={() => setSelectedMember(member)}
                   className="group relative bg-slate-500/5 border border-slate-500/10 rounded-2xl p-6 text-center backdrop-blur-md hover:border-emerald-500/40 transition-all duration-300 shadow-sm hover:shadow-xl overflow-hidden cursor-pointer"
                 >
                   <div className="relative w-32 h-32 sm:w-36 sm:h-36 mx-auto mb-5 rounded-full overflow-hidden border-2 border-slate-500/20 group-hover:border-emerald-500 transition-colors duration-500 shadow-inner">
-                    <Image
-                      src={member.image}
-                      alt={member.name}
-                      fill
-                      className="object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
+                    {member.image ? (
+                      <Image
+                        src={member.image}
+                        alt={member.name}
+                        fill
+                        unoptimized={isUploadedImage(member.image)}
+                        className="object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center bg-emerald-500/10 text-emerald-500 text-3xl font-extrabold">
+                        {getInitials(member.name)}
+                      </div>
+                    )}
                     <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                       <ZoomIn className="w-6 h-6 text-emerald-400" />
                     </div>
@@ -345,12 +467,19 @@ export default function AboutPage() {
               </button>
 
               <div className="relative w-48 h-48 mx-auto mb-4 rounded-2xl overflow-hidden border-2 border-emerald-500/50 shadow-lg">
-                <Image
-                  src={selectedMember.image}
-                  alt={selectedMember.name}
-                  fill
-                  className="object-cover"
-                />
+                {selectedMember.image ? (
+                  <Image
+                    src={selectedMember.image}
+                    alt={selectedMember.name}
+                    fill
+                    unoptimized={isUploadedImage(selectedMember.image)}
+                    className="object-cover"
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center bg-emerald-500/10 text-emerald-400 text-5xl font-extrabold">
+                    {getInitials(selectedMember.name)}
+                  </div>
+                )}
               </div>
 
               <h3 className="text-xl font-bold text-white">
